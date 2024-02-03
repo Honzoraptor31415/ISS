@@ -9,23 +9,6 @@ pygame.display.set_caption("ISS with Python")
 
 clock = pygame.time.Clock()
 
-black = (20, 20, 20)
-
-class ApiCall:
-  def __init__(self, url):
-    self.url = url
-  
-  def get_data(self):
-    response = requests.get(self.url)
-    data = response.json()
-    return data
-
-iss_people = ApiCall("http://api.open-notify.org/astros.json")
-iss_position = ApiCall("http://api.open-notify.org/iss-now.json")
-
-print(f"{iss_people.get_data()}\n\n")
-print(iss_position.get_data()["iss_position"]["longitude"])
-
 map_image = pygame.image.load("img/map.png")
 map_image = pygame.transform.scale(map_image, (width, height))
 map_rect = map_image.get_rect()
