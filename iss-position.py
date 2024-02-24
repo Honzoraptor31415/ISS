@@ -7,6 +7,9 @@ height = 540
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("ISS with Python")
 
+white = (255, 255, 255)
+black = (0, 0, 0)
+
 clock = pygame.time.Clock()
 
 map_image = pygame.image.load("img/map.png")
@@ -19,14 +22,21 @@ iss_image = pygame.transform.scale(iss_image, (40, 40))
 iss_rect = iss_image.get_rect()
 iss_rect.center = (width//2, height//2)
 
+ppl_response = requests.get("http://api.open-notify.org/astros.json")
+ppl_data = ppl_response.json()
+ppl_names = [item['name'] for item in ppl_data["people"]]
+
+ppl_font = pygame.font.SysFont(None, 21)
+ppl_text = ppl_font.render(f"These people are currentely on the ISS: {", ".join(ppl_names)}.", True, black,white)
+ppl_rect = ppl_text.get_rect()
+ppl_rect.left = 0
+ppl_rect.top = 0
+
 run = True
 while run:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       run = False
-  
-  ppl_response = requests.get("http://api.open-notify.org/astros.json")
-  ppl_data = ppl_response.json()
 
   pos_response = requests.get("http://api.open-notify.org/iss-now.json")
   pos_data = pos_response.json()
@@ -35,6 +45,7 @@ while run:
 
   window.blit(map_image, map_rect)
   window.blit(iss_image, iss_rect)
+  window.blit(ppl_text, ppl_rect)
 
   pygame.display.update()
   clock.tick(1)
